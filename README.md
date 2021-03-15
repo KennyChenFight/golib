@@ -12,6 +12,9 @@ Packaging this source: [jwt-go](https://github.com/dgrijalva/jwt-go)
 ## mongolib
 Packaging this source: [mongo-go-driver](https://github.com/mongodb/mongo-go-driver)
 
+## amqplib
+Packaging this source: [cony](https://github.com/assembla/cony)
+
 ## Contribution
 + provide your idea about this golib in issue or raise your PR request
 
