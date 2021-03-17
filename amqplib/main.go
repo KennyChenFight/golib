@@ -1,14 +1,15 @@
 // Package amqplib is for encapsulating github.com/assembla/cony any operations
 //
 // As a quick start for publisher:
-// 	connectionConfig := &amqplib.AMQPConnectionConfig{
+//	connectionConfig := &amqplib.AMQPConnectionConfig{
 //		URL:          "amqp://guest:guest@localhost/",
 //		ErrorHandler: nil,
-//	}
+//}
 //	queueConfig := &amqplib.AMQPQueueConfig{
 //		ExchangeName: "test-exchange",
 //		ExchangeType: amqplib.Fanout,
-//		QueueName:    "test-queue",
+//		RoutingKey: "key",
+//		AutoDeclareExchange: true,
 //		AutoDelete:   false,
 //	}
 //	client1 := amqplib.NewAMQPClient(connectionConfig)
@@ -18,9 +19,9 @@
 //		panic(err)
 //	}
 //	defer publisher.Close()
-//  err := publisher.Publish(amqp.Publishing{
-//			Body: []byte("fuck you"),
-//		})
+//	err = publisher.Publish(amqp.Publishing{
+//		Body: []byte("hello"),
+//	})
 //	if err != nil {
 //		panic(err)
 //	}
