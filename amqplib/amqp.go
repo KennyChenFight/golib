@@ -21,12 +21,13 @@ const (
 )
 
 type AMQPQueueConfig struct {
-	ExchangeName string
-	ExchangeType ExchangeType
-	RoutingKey   string
-	QueueName    string
-	ConsumerName string
-	AutoDelete   bool
+	ExchangeName        string
+	ExchangeType        ExchangeType
+	AutoDeclareExchange bool
+	RoutingKey          string
+	QueueName           string
+	ConsumerName        string
+	AutoDelete          bool
 }
 
 func NewAMQPClient(connConf *AMQPConnectionConfig) *AMQPClient {
@@ -69,24 +70,34 @@ type AMQPClient struct {
 }
 
 func (c *AMQPClient) NewPublisher(cfg *AMQPQueueConfig) (*AMQPPublisher, error) {
+	var declarations []cony.Declaration
 	exchange, err := c.initExchange(cfg)
 	if err != nil {
 		return nil, err
 	}
+	if cfg.AutoDeclareExchange {
+		declarations = append(declarations, cony.DeclareExchange(*exchange))
+	}
 
+	var publisher *cony.Publisher
 	routingKey, err := c.initRoutingKey(cfg)
 	if err != nil {
 		return nil, err
 	}
-
-	queue, err := c.initQueue(cfg)
-	if err != nil {
-		return nil, err
+	publisher = cony.NewPublisher(exchange.Name, routingKey)
+	if cfg.ExchangeType != Fanout {
+		queue, err := c.initQueue(cfg)
+		if err != nil {
+			return nil, err
+		}
+		declarations = append(declarations, cony.DeclareQueue(queue))
+		declarations = append(declarations, cony.DeclareBinding(cony.Binding{
+			Queue:    queue,
+			Exchange: *exchange,
+			Key:      routingKey,
+		}))
 	}
-
-	publisher := cony.NewPublisher(exchange.Name, routingKey)
-
-	c.client.Declare(c.initDeclare(exchange, queue, routingKey))
+	c.client.Declare(declarations)
 	c.client.Publish(publisher)
 	return &AMQPPublisher{
 		Publisher: publisher,
@@ -110,7 +121,17 @@ func (c *AMQPClient) NewConsumer(cfg *AMQPQueueConfig) (*AMQPConsumer, error) {
 	}
 
 	consumer := cony.NewConsumer(queue)
-	c.client.Declare(c.initDeclare(exchange, queue, routingKey))
+	var declarations []cony.Declaration
+	if cfg.AutoDeclareExchange {
+		declarations = append(declarations, cony.DeclareExchange(*exchange))
+	}
+	declarations = append(declarations, cony.DeclareQueue(queue))
+	declarations = append(declarations, cony.DeclareBinding(cony.Binding{
+		Queue:    queue,
+		Exchange: *exchange,
+		Key:      routingKey,
+	}))
+	c.client.Declare(declarations)
 	c.client.Consume(consumer)
 	return &AMQPConsumer{
 		amqpClient:  c,
@@ -141,7 +162,7 @@ func (c *AMQPClient) initExchange(cfg *AMQPQueueConfig) (*cony.Exchange, error) 
 }
 
 func (c *AMQPClient) initRoutingKey(cfg *AMQPQueueConfig) (string, error) {
-	if cfg.ExchangeType != Fanout && cfg.RoutingKey == "" {
+	if cfg.RoutingKey == "" {
 		return "", errors.New("routing key is required")
 	}
 	return cfg.RoutingKey, nil
