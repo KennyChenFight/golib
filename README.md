@@ -15,6 +15,9 @@ Packaging this source: [mongo-go-driver](https://github.com/mongodb/mongo-go-dri
 ## amqplib
 Packaging this source: [cony](https://github.com/assembla/cony)
 
+## pglib
+Packaging this source: [go-pg](https://github.com/go-pg/pg)
+
 ## Contribution
 + provide your idea about this golib in issue or raise your PR request
 
