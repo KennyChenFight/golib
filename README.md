@@ -18,6 +18,9 @@ Packaging this source: [cony](https://github.com/assembla/cony)
 ## pglib
 Packaging this source: [go-pg](https://github.com/go-pg/pg)
 
+## uuidlib
+Packaging this source: [go.uuid](https://github.com/satori/go.uuid)
+
 ## Contribution
 + provide your idea about this golib in issue or raise your PR request
 
