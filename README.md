@@ -21,6 +21,9 @@ Packaging this source: [go-pg](https://github.com/go-pg/pg)
 ## uuidlib
 Packaging this source: [go.uuid](https://github.com/satori/go.uuid)
 
+## loglib
+Packaging this source: [zap](https://github.com/uber-go/zap)
+
 ## Contribution
 + provide your idea about this golib in issue or raise your PR request
 
