@@ -1,6 +1,6 @@
-// Package amqplib is for encapsulating github.com/assembla/cony any operations
+// Package loglib is for encapsulating https://github.com/uber-go/zap any operations
 //
-// As a quick start for publisher:
+// As a quick start for loglib:
 //	logger, err := loglib.NewProductionLogger()
 //	if err != nil {
 //		panic(err)
@@ -113,6 +113,10 @@ func (l *Logger) Log(keyvals ...interface{}) error {
 		return err
 	}
 	return nil
+}
+
+func (l *Logger) With(fields ...zap.Field) {
+	l.Logger = l.Logger.With(fields...)
 }
 
 func (l *Logger) logging(level zapcore.Level, msg string, fields []zap.Field) error {
