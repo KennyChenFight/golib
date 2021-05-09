@@ -18,6 +18,9 @@ Packaging this source: [cony](https://github.com/assembla/cony)
 ## pglib
 Packaging this source: [go-pg](https://github.com/go-pg/pg)
 
+## redislib
+Packaging this source: [go-redis](https://github.com/go-redis/redis)
+
 ## uuidlib
 Packaging this source: [go.uuid](https://github.com/satori/go.uuid)
 
