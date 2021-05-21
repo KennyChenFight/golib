@@ -32,20 +32,22 @@ redis.call('ZREMRANGEBYSCORE', key, 0, lastTimestamp-interval)
 local total = redis.call('ZCARD', key)
 if total < capacity then
 	redis.call('ZADD', key, lastTimestamp, lastTimestamp)
-	total = total + 1
+	total = total + 1]
+else
+	total = -1
 end
 
 redis.call('EXPIRE', key, expire)
 
-return capacity - total
+return total
 `
 
 func (s *SlideWindowRateLimiter) Incr(ctx context.Context, bucketName string, lastTimestamp int64) (int64, error) {
 	args := []interface{}{s.capacity, s.interval, s.expire, lastTimestamp}
 
-	remain, err := s.luaScript.Run(ctx, s.client, []string{bucketName}, args...).Result()
+	total, err := s.luaScript.Run(ctx, s.client, []string{bucketName}, args...).Result()
 	if err != nil {
 		return 0, err
 	}
-	return remain.(int64), nil
+	return total.(int64), nil
 }
