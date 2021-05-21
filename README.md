@@ -27,6 +27,9 @@ Packaging this source: [go.uuid](https://github.com/satori/go.uuid)
 ## loglib
 Packaging this source: [zap](https://github.com/uber-go/zap)
 
+## ratelimitlib
+* add redis implements slide window strategy
+
 ## Contribution
 + provide your idea about this golib in issue or raise your PR request
 
