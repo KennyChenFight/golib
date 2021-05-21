@@ -32,7 +32,7 @@ redis.call('ZREMRANGEBYSCORE', key, 0, lastTimestamp-interval)
 local total = redis.call('ZCARD', key)
 if total < capacity then
 	redis.call('ZADD', key, lastTimestamp, lastTimestamp)
-	total = total + 1]
+	total = total + 1
 else
 	total = -1
 end
